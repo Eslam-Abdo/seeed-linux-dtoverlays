@@ -1,51 +1,77 @@
-# seeed-linux-dtoverlays
 
-On embedded systems, the [Device Tree](https://elinux.org/Device_Tree_What_It_Is) helps the kernel understand various peripherals that are connected to the board and how to initialize them. These hardware might be things like LDO regulators, various controllers, GPIO, etc which are generic, but yet needs certain configuration that should not be hard-coded into the kernel. To understand more about device trees I recommend you start with the Raspberry Pi [documentation on this topic](https://www.raspberrypi.org/documentation/configuration/device-tree.md). There are more links at the end of this article.
+# MCP2515 for Jetson Nano
 
+Fixes problem on Jetson Nano while attempting to communicate via CAN bus driver (MCP2515). This repo is [fork from seeed](https://github.com/Seeed-Studio/seeed-linux-dtoverlays#readme).
 
+> **NOTE:** It is recommended to reflash your microSD if you did modify the system. Just make sure everything working as intended.
 
-Overlays:
-------------
+## Pin Configuration
 
-Step 1: Clone this repo:
-```sh
-git clone https://github.com/Seeed-Studio/seeed-linux-dtoverlays
-cd seeed-linux-dtoverlays
-```
-Step 2: Install *.dtbo:
-```sh
-#Select platform by replacing word <platform> to
-#one of {jetsonnano bb stm32mp1 rpi imx6ull}.
-make all_<platform>
-#On iMx6ull-NPI
-sudo make install_imx6ull
-#on RPI
-sudo make install_rpi
-#On beagleboard
-sudo make install_bb
-#On JetsonNano
-sudo make install_jetsonnano
-```
-more:
-```sh
-@echo "Targets:"
-@echo "  all_<PLATFORM>:            Build all device tree binaries for <PLATFORM>"
-@echo "  clean_<PLATFORM>:          Clean all generated files for <PLATFORM>"
-@echo "  install_<PLATFORM>:        Install all generated files for <PLATFORM> (sudo)"
-@echo ""
-@echo "  overlays/<PLATFORM>/<DTS>.dtbo   Build a single device tree binary"
-@echo ""
-@echo "PLATFORMES: jetsonnano bb stm32mp1 rpi imx6ull"
+| MCP2515 | Jetson Nano |
+| :------ | :---------- |
+| VCC     | 5V          |
+| GND     | GND         |
+| CS      | 24          |
+| MISO    | 21          |
+| MOSI    | 19          |
+| SCK     | 23          |
+| INT     | 31          |
 
-```
+## How to Use
 
-## Further Reading
-- Device Tree for Dummies: https://elinux.org/images/f/f9/Petazzoni-device-tree-dummies_0.pdf
-- Raspberry Pi and the Device Tree: https://www.raspberrypi.org/documentation/configuration/device-tree.md
-- Device Tree overlay support in the Linux Kernel: https://www.kernel.org/doc/Documentation/devicetree/overlay-notes.txt
-- FDT overlays in U-Boot: https://github.com/u-boot/u-boot/blob/master/doc/README.fdt-overlays
+1. Open terminal app at your Jetson Nano
+2. Let's clone this repo. To do that, run these commands
+   ```
+   git clone https://github.com/Thor-x86/seeed-linux-dtoverlays
+   cd seeed-linux-dtoverlays
+   ```
+3. Then build and install with these commands
+   ```
+   make all_jetsonnano
+   sudo make install_jetsonnano
+   ```
+   > **NOTE:** You'll asked for password to modify the system. It is normal when you type your password but nothing happens. Just type it as usual then hit enter.
+4. After that, open utility to configure the Jetson
+   ```
+   sudo /opt/nvidia/jetson-io/jetson-io.py
+   ```
+5. Hit up or down arrow to navigate. Make sure ` Configure Jetson for compatible hardware` is highlighted then hit enter.
+6. Navigate to `MCP251x CAN Controller` and hit enter to select
+7. Choose `Save and reboot to reconfigure pins` and hit enter
+8. Hit enter again to reboot
 
-## Modules:
-------------
-Mainline does not have a kernel module, or there is controversy about a kernel module that does work well. We will also collect them together and put them here.
-The kernel modules will have the corresponding documentation and detailed instructions。
+## Starting Up CAN Driver
+
+1. Open the terminal again, then enter this command
+   ```
+   ip link
+   ```
+2. Make sure this word below shown at terminal
+   ```
+   can0: ...
+   ```
+   If not shown, possibly the wiring is not connected properly or too loose. Already correct? Then the fix is not working and you have to reflash the micro SD and start over.
+3. Now let's configure the bitrate by entering this command
+   ```
+   sudo ip link set can0 type can bitrate <your-bitrate>
+   ```
+   Change `<your-bitrate>` to your intended bitrate **in bits unit**. As example `125000` for 125kbps.
+4. To start the CAN driver, enter this command
+   ```
+   sudo ifconfig can0 up
+   ```
+5. To stop the CAN driver, enter this command
+   ```
+   sudo ifconfig can0 down
+   ```
+
+## Testing the CAN Driver
+
+- Read data from CAN bus
+  ```
+  candump can0
+  ```
+- Send "Hi!" text to CAN bus
+  ```
+  cansend can0 000#48.69.21.00
+  ```
