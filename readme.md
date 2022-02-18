@@ -1,9 +1,20 @@
 
 # MCP2515 for Jetson Nano
 
-Fixes problem on Jetson Nano while attempting to communicate via CAN bus driver (MCP2515). This repo is [fork from seeed](https://github.com/Seeed-Studio/seeed-linux-dtoverlays#readme).
+Fixes problem on Jetson Nano while attempting to communicate via CAN bus driver (MCP2515). This repo is [fork from seeed](https://github.com/Seeed-Studio/seeed-linux-dtoverlays#readme), and [from Thor-x86](https://github.com/Thor-x86/seeed-linux-dtoverlays#readme)
 
 > **NOTE:** It is recommended to reflash your microSD if you did modify the system. Just make sure everything working as intended.
+## Requirement 
+> Need to download this is version of OS [Jetpack 4.5.1 sdk](https://developer.nvidia.com/jetpack-sdk-451-archive).
+
+> **NOTE:** May be you need to edit the following in [jetson-mcp2515.dts](https://github.com/Eslam-Abdo/seeed-linux-dtoverlays/blob/master/overlays/jetsonnano/jetson-mcp2515.dts) file:
+>   1. add ``` jetson-header-name = "Jetson 40pin Header"; ``` in line `19` if Not Found it.
+>   1. edit ``` compatible ``` values in line `20`. For jetson nano 2GB ``` compatible = "nvidia,p3542-0000+p3448-0003"; ```
+>   
+>   Users can obtain the correct compatible string for their Jetson platform by entering the following command. If you have a Jetson Nano developer kit, this command also identifies the PCB revision.
+>   
+>        $ cat /sys/firmware/devicetree/base/compatible 
+>    3. ``` clock-frequency ``` as CAN Module crystal here I set to ``` 8MHZ ```  in line `30`
 
 ## Pin Configuration
 
@@ -22,7 +33,7 @@ Fixes problem on Jetson Nano while attempting to communicate via CAN bus driver 
 1. Open terminal app at your Jetson Nano
 2. Let's clone this repo. To do that, run these commands
    ```
-   git clone https://github.com/Thor-x86/seeed-linux-dtoverlays
+   git clone https://github.com/Eslam-Abdo/seeed-linux-dtoverlays
    cd seeed-linux-dtoverlays
    ```
 3. Then build and install with these commands
@@ -75,3 +86,9 @@ Fixes problem on Jetson Nano while attempting to communicate via CAN bus driver 
   ```
   cansend can0 000#48.69.21.00
   ```
+  
+## Resources
+1. [document from nvidia to custom Device Tree Overlays](https://docs.nvidia.com/jetson/l4t/index.html#page/Tegra%20Linux%20Driver%20Package%20Development%20Guide/hw_setup_jetson_io.html)
+2. first step of solution we found here [Jetson nano and mcp2515 can module](https://forums.developer.nvidia.com/t/jetson-nano-and-mcp2515-can-module/112271/288)
+3. next step we found here [BUG: Jetson Nano P3450-B00 with MCP2515, can receive but cannot send](https://forums.developer.nvidia.com/t/bug-jetson-nano-p3450-b00-with-mcp2515-can-receive-but-cannot-send/187683)
+
