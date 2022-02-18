@@ -88,7 +88,8 @@ Fixes problem on Jetson Nano while attempting to communicate via CAN bus driver 
   ```
   
 ## Resources
-1. [document from nvidia to custom Device Tree Overlays](https://docs.nvidia.com/jetson/l4t/index.html#page/Tegra%20Linux%20Driver%20Package%20Development%20Guide/hw_setup_jetson_io.html)
-2. first step of solution we found here [Jetson nano and mcp2515 can module](https://forums.developer.nvidia.com/t/jetson-nano-and-mcp2515-can-module/112271/288)
-3. next step we found here [BUG: Jetson Nano P3450-B00 with MCP2515, can receive but cannot send](https://forums.developer.nvidia.com/t/bug-jetson-nano-p3450-b00-with-mcp2515-can-receive-but-cannot-send/187683)
+1. Document from nvidia to [custom Device Tree Overlays](https://docs.nvidia.com/jetson/l4t/index.html#page/Tegra%20Linux%20Driver%20Package%20Development%20Guide/hw_setup_jetson_io.html)
+2. Document from nvidia [CAN on Jetson Nano Devices](https://docs.nvidia.com/jetson/l4t/index.html#page/Tegra%20Linux%20Driver%20Package%20Development%20Guide/hw_setup_jetson_can.html#wwpID0ELHA)
+3. first step of solution we found here [Jetson nano and mcp2515 can module](https://forums.developer.nvidia.com/t/jetson-nano-and-mcp2515-can-module/112271/288)
+4. next step we found here [BUG: Jetson Nano P3450-B00 with MCP2515, can receive but cannot send](https://forums.developer.nvidia.com/t/bug-jetson-nano-p3450-b00-with-mcp2515-can-receive-but-cannot-send/187683)
 
