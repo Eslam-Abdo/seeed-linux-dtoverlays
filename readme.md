@@ -1,5 +1,5 @@
 
-# MCP2515 for Jetson Nano
+# MCP2515 for Jetson Nano 2GB
 
 Fixes problem on Jetson Nano while attempting to communicate via CAN bus driver (MCP2515). This repo is [fork from seeed](https://github.com/Seeed-Studio/seeed-linux-dtoverlays#readme), and [from Thor-x86](https://github.com/Thor-x86/seeed-linux-dtoverlays#readme)
 
